@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+	{% load static %}
+
+<head>
+	<title>Login</title>
+	<!-- Favicon -->
+    <link rel="shortcut icon" href="#" type="image/png">
+
+    <!-- Arquivos CSS -->
+	<link rel="stylesheet" type="text/css" href="{% static 'gestorbases/assets/stylesheets/vendors.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'gestorbases/assets/stylesheets/algaworks.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'gestorbases/assets/stylesheets/application.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'gestorbases/style_login.css' %}">
+</head>
+
+<body>
+	<div class="container">
+        <div class="card card-container">
+            <!--
+            <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+        -->
+        <center><h3>CONTROLADORIA GERAL DO ESTADO DE GOIÁS - ODP</h3></center>
+            <p id="profile-name" class="profile-name-card"></p>
+            <form name="form1" method="post" action="/gestorbases/login/" class="form-signin">
+            	{% csrf_token %}
+                <span id="reauth-email" class="reauth-email"></span>
+                <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Usuário" required autofocus>
+                <input type="password" name="senha" id="senha" class="form-control" placeholder="Senha" required>
+ 
+                <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Logar</button>
+            </form><!-- /form -->
+            <a href="#" class="forgot-password">
+                Forgot the password?
+            </a>
+        </div><!-- /card-container -->
+    </div><!-- /container -->
+
+</body>
+</html>

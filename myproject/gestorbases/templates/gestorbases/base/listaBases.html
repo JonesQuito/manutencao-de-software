@@ -1,0 +1,124 @@
+{% extends "gestorbases/_layouts/base.html" %}
+
+{% load widget_tweaks %}
+
+
+{% load static %}
+
+{% block titulo_conteudo %}Lista de Bases {% endblock %}
+
+{% block opcoes %}
+	
+{% endblock %}
+
+{% block conteudo %}
+
+			
+	<div class="container-fluid">
+
+		<div class="table-responsive">
+			{% if bases|length > 0 %}
+				<table id="tabela-produtos" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
+					<thead class="aw-table-header-dark"><!--thead-dark-->
+						<tr>
+							<th class="text-center">Id</th>
+							<th>Nome</th>
+							<th>Descrição</th>
+							<th>Host</th>
+							<th>Owner</th>
+							<th class="text-center">Editar</th>
+							<th class="text-center">Excluir</th>
+						</tr>
+					</thead>
+				  
+					<tbody>
+						{% for base in bases %}
+							<tr >
+								<td class="text-center">{{base.id}}</td>
+
+								<td>
+									<a href="#">{{base.nome}}</a>
+								</td>
+
+								<td >{{base.descricao}}</td>
+
+								<td class="text-right">{{base.host}}</td>
+
+								<td class="text-right">{{base.owner}}</td>
+
+								<td class="text-center">
+									<a href="{% url 'gestorbases:atualiza_base' pk=base.id %}" class="btn btn-info btn-xs"><span class="fa fa-edit"></span>
+							        </a>
+							    </td>
+
+							    <td class="text-center" id="excluir">
+									<!--<button type="button" class="btn btn-danger btn-xs"> <!--onclick="excluir()"-->
+										<a href="{% url 'gestorbases:exclui_base' pk=base.id %}" class="btn btn-danger btn-xs"> <!--{% url 'gestorbases:exclui_base' pk=base.id %}-->
+										<span class="fa fa-trash" ></span>
+										</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+                <div class="text-center mt-5 mb-5 jumbotron">
+                   <h5>Nenhuma <code>Base</code> cadastrada ainda.</h5>
+                </div>
+            {% endif %}
+		</div>
+
+
+    	<hr style="margin-top: : 0px">
+    	<div class="row">
+			<!-- CONTROLES DE NAVEGAÇÃO -->
+			<div class="col-sm-9 col-md-6 col-lg-8">
+				<ul class="pagination">
+					{% for base in bases.paginator.page_range %}
+						
+						<li class="{% if  base  ==  bases.number  %}active{% endif %}" ><a href="?page={{base}}">{{base}}</a></li>
+					{% endfor %}
+				
+				</ul>
+			</div>
+
+
+			<div class="col-sm-3 col-md-6 col-lg-4 text-right">
+				<div> <!-- class="text-right" -->
+			        <a href="{% url 'gestorbases:nova_base' %}" class="btn btn-primary">
+			          Nova Base
+			        </a>
+		    	</div>
+	    	</div>
+
+    	</div>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<script>
+	function excluir() {
+		swal({
+			title: "Tem certeza?",
+			text: "Você não poderá recuperar este registro após a exclusão.",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "Sim, exclua agora!",
+			closeOnConfirm: false,
+			showLoaderOnConfirm: true
+		}, function() {
+			setTimeout(function() {
+				swal("Excluído!", "O registro foi excluído com sucesso.", "success");
+			}, 2000);
+		});
+	}
+	</script>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "gestorbases/_layouts/base.html" %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block titulo_conteudo %}Atualizações {% endblock %}
+
+{% block opcoes %}
+	
+{% endblock %}
+
+{% block conteudo %}			
+	<div class="container-fluid">
+		<div class="row">
+			<form method="get" action="#">
+		        <div class="col-sm-3">
+			          <div class="form-group">
+			          	<label>Tabela</label>
+						<input type="text" name="tabela" value="{{nomeTabela}}" class="form-control xs" placeholder="Nome da tabela">
+			          </div>
+		        </div>
+		        <div class="col-sm-2">
+			          <div class="form-group">
+			          	<label>Atualizada após</label>
+			            <input type="date" name="data" value="{{data}}" class="form-control xs">
+			          </div>
+		        </div>
+		        <div class="col-sm-3">
+		        	<div class="form-group">
+		        		<br>
+			            <input type="submit" value="buscar" class="btn btn-primary">
+			         </div>
+		        </div>
+	        </form>
+	    </div>
+		<div class="table-responsive">
+			{% if atualizacoes|length > 0 %}
+				<table id="tabela-produtos" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
+					<thead class="aw-table-header-dark"><!--thead-dark-->
+						<tr>
+							<th>Tabela</th>
+							<th>Data atualização</th>
+							<th>Mês_Ref</th>
+							<th>Ano_Ref</th>
+							<th>Responsável</th>
+							<th class="text-center">Editar</th>
+							<th class="text-center">Excluir</th>
+						</tr>
+					</thead>				  
+					<tbody>
+						{% for atualizacao in atualizacoes %}
+							<tr >
+								<td data-toggle="tooltip" data-placement="top" title='Detalhes da atualização'>
+									<a href="{% url 'gestorbases:detalhes_atualizacao' pk=atualizacao.id %}">{{atualizacao.tabela}}</a>
+								</td>
+								<td >
+									{{atualizacao.data_atualizacao}}
+								</td>
+
+								<td class="text-left">{{atualizacao.mes_ref}}</td>
+
+								<td class="text-center">{{atualizacao.ano_ref}}</td>
+
+								<td class="text-center">{{atualizacao.responsavel}}</td>
+
+								<td class="text-center">
+									<a href="{% url 'gestorbases:atualiza_atualizacao' pk=atualizacao.pk %}" class="btn btn-info btn-xs"><span class="fa fa-edit"></span>
+							        </a>
+							    </td>
+							    <td class="text-center">
+							    	<form>
+									<!--<button type="button" class="btn btn-danger btn-xs"> <!--onclick="excluir()"-->
+										<a href="{% url 'gestorbases:exclui_atualizacao' pk=atualizacao.pk %}" class="btn btn-danger btn-xs">
+										<span class="fa fa-trash" ></span>
+										</a>
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+                <div class="text-center mt-5 mb-5 jumbotron">
+                   <h5>Nenhuma <code>Base</code> cadastrada ainda.</h5>
+                </div>
+            {% endif %}
+		</div>
+
+    	<hr style="margin-top: : 0px">
+    	<div class="row">
+			<!-- CONTROLES DE NAVEGAÇÃO -->
+			<div class="col-sm-9 col-md-6 col-lg-8">
+				<ul class="pagination">
+					{% for atualizacao in atualizacoes.paginator.page_range %}
+						
+						<li class="{% if  atualizacao  ==  atualizacoes.number  %}active{% endif %}" ><a href="?page={{atualizacao}}">{{atualizacao}}</a></li>
+					{% endfor %}
+				
+				</ul>
+			</div>
+
+			<div class="col-sm-3 col-md-6 col-lg-4 text-right">
+				<div> <!-- class="text-right" 
+			        <a href="#" class="btn btn-primary">
+			          Nova Atualização
+			        </a>
+			        -->
+		    	</div>
+	    	</div>
+
+    	</div>
+	</div>
+
+{% endblock %}

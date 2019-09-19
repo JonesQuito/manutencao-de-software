@@ -1,0 +1,94 @@
+{% extends "gestorbases/_layouts/base.html" %}
+
+{% load widget_tweaks %}
+
+
+{% load static %}
+
+{% block titulo_conteudo %}Editar atualização {% endblock %}
+
+
+{% block conteudo %}
+
+  <div class="container-fluid">
+    <!--
+    <div class="alert  alert-danger  alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <i class="fa  fa-exclamation-circle"></i> Já existe um produto com o nome informado.
+    </div>
+  -->
+
+    <form method="post" >
+      <!-- Não se esqueça dessa tag -->
+            {% csrf_token %}
+      
+      	<div class="row">
+        <div class="col-sm-6">
+          	<div class="form-group">
+	            <label for="input-base-host">Tabela</label>
+	            {% render_field form.tabela class+="form-control" %}
+          	</div>
+        </div>
+	        <div class="col-sm-6">
+	          	<div class="form-group">
+		            <label for="input-base-host">Responsável atualização</label>
+		            {% render_field form.responsavel class+="form-control" %}
+	          	</div>
+	        </div>
+      	</div>
+
+      	<div class="row">
+	        <div class="col-sm-4">
+	          	<div class="form-group">
+		            <label for="input-base-host">Origem Dados</label>
+		            {% render_field form.origem_dados class+="form-control" %}
+	          	</div>
+	        </div>
+	        <div class="col-sm-4">
+	          	<div class="form-group">
+		            <label for="input-base-host">Mês Referência</label>
+		            {% render_field form.mes_ref class+="form-control" %}
+	          	</div>
+	        </div>
+	        <div class="col-sm-4">
+	          	<div class="form-group">
+		            <label for="input-base-host">Ano Referência</label>
+		            {% render_field form.ano_ref class+="form-control" %}
+	          	</div>
+	        </div>
+      	</div>     
+
+      <div class="form-group">
+        <label for="input-base-descricao">Observações</label>
+        {% render_field form.observacoes class+="form-control" rows="2" %}
+      </div>
+      
+      <div class="form-group">
+        <button class="btn  btn-primary" type="submit">Salvar</button>
+        <a href="{% url 'gestorbases:lista_atualizacoes' %}" class="btn  btn-default">Cancelar</a>
+        <!--
+        <a href="#" class="btn  btn-link  aw-btn-link-danger">Excluir este produto</a>   onclick="excluir() -->
+      </div>
+    </form>
+  </div>
+
+  <script>
+  function excluir() {
+    swal({
+      title: "Tem certeza?",
+      text: "Você não poderá recuperar o produto após a exclusão.",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Sim, exclua agora!",
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true
+    }, function() {
+      setTimeout(function() {
+        swal("Excluído!", "O produto foi excluído com sucesso.", "success");
+      }, 2000);
+    });
+  }
+  </script>
+
+{% endblock %}

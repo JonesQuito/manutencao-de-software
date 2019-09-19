@@ -1,0 +1,59 @@
+{% extends "gestorbases/_layouts/base.html" %}
+
+{% load widget_tweaks %}
+
+
+{% load static %}
+
+{% block titulo_conteudo %}Excluir Registro de atualização {% endblock %}
+
+{% block opcoes %}
+    
+{% endblock %}
+
+{% block conteudo %}
+
+    <div class="card" style="border: 1px solid #1E94D2;
+        								border-radius: 5px;
+        								padding: 2%; box-shadow: 5px 5px 8px #888888;">
+      <div class="card-body">
+        <h5 class="card-title" style="font-weight: bold;">Tem certeza que quer excluir este registro?</h5>
+        <hr />
+        <div class="form-group" style="border-radius: 5px;
+        								padding: 2%;  ">
+          <label for="input-base-nome">Tabela: </label>
+          {{atualizacao.tabela}}
+          <br/>
+          <label for="input-base-nome">Data Atualização: </label>
+          {{atualizacao.data_atualizacao}}
+          <br/>
+          <label for="input-base-nome">Origem Dados: </label>
+          {{atualizacao.origem_dados}}
+          <br/>
+          <label for="input-base-nome">Ano de Referência: </label>
+          {{atualizacao.ano_ref}}
+          <br/>
+          <label for="input-base-nome">Mês de Referência: </label>
+          {{atualizacao.mes_ref}}
+          <br/>
+          <label for="input-base-nome">Responsável: </label>
+          {{atualizacao.responsavel}}
+          <br/>
+          <label for="input-base-nome">Observações: </label>
+          {{atualizacao.observacoes}}
+        </div>
+      </div>
+
+      <form method="post">
+          {% csrf_token %}
+          <hr />
+          <div class="text-right">
+            <a href="{% url 'gestorbases:lista_atualizacoes' %}" 
+              class="btn btn-outline-danger">
+                Cancelar
+            </a>
+            <button class="btn btn-danger">Excluir</button>
+          </div>
+        </form>
+    </div>
+{% endblock %}

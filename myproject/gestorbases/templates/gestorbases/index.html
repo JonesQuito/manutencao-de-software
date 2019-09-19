@@ -1,0 +1,37 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'gestorbases/assets/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gestorbases/assets/stylesheets/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gestorbases/assets/stylesheets/vendors.min.css' %}">
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+</head>
+<body>
+	<h1>Home page</h1>
+	<br>
+	<br>
+	<a href="{% url 'gestorbases:nova_base' %}">Nova Base</a>
+
+	<div class="table-responsive" ">
+		
+		<table class="table" ">
+			<tr>
+				<th>Matrícula</th>
+				<th>Nome</th>
+				<th>Nome da mãe</th>
+			</tr>
+			{% for aluno in alunos %}
+		  	<tr>
+		    	<td>{{ aluno.matricula }}</td>
+			    <td>{{ aluno.nome }}</td> 
+			    <td>{{ aluno.nome_mae }}</td>
+		  	</tr>
+		  	{% endfor %}
+		</table>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+	<form method="post" action="">
+	  {% csrf_token %}
+
+	  <label for="{{ form.matricula.id_for_label }}">Matricula</label>
+	  {{ form.matricula }}
+
+	  <label for="{{ form.nome.id_for_label }}">Nome</label>
+	  {{ form.nome }}
+
+	  <label for="{{ form.nome_mae.id_for_label }}">Nome da mãe</label>
+	  {{ form.nome_mae }}
+
+	  <button type="submit">Cadastrar</button>
+	</form>
+
+</body>
+</html>
