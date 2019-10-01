@@ -10,7 +10,10 @@
 `virtualenv nome_do_ambiente`
 
 ### CLONAR O PROJETO DENTRO DO AMBINETE VIRTUAL CRIADO (USAR O GIT BASH)
-`git clone https://github.com/JonesQuito/projetos_web_django.git`
+`git clone https://github.com/JonesQuito/manutencao-de-software.git`
+
+### ATIVANDO O AMBIENTE VIRTUAL
+é necessário estar na raiz do ambiente virtual e executar o seguinte comando `Script\activate` (no Windows).
 
 ### INSTALAR AS BIBLIOTECAS REQUERIDAS PARA O PROJETO (o ambiente virtual deve está ativado)
 (de dentro da pasta clonada executar) `pip install -r requirements.txt`
