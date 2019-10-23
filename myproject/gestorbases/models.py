@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-
+'''
+    Classe que modela o objeto Base é convertida em uma tabela do banco de dados
+'''
 class Base(models.Model):
     nome = models.CharField(max_length=255, null=False, blank=False)
     descricao = models.TextField(null=True, blank=False)
@@ -14,6 +16,9 @@ class Base(models.Model):
         return self.nome
 
 
+'''
+    Classe que modela o objeto Tabela é convertida em uma tabela do banco de dados
+'''
 class Tabela(models.Model):
     base = models.ForeignKey(Base, on_delete=models.CASCADE)
     nome = models.CharField(max_length=255, null=True, blank=False)
@@ -25,7 +30,9 @@ class Tabela(models.Model):
         return self.nome
      
 
-
+'''
+    Classe que modela uma atualização é convertida em uma tabela do banco de dados
+'''
 class Atualizacao(models.Model):
     tabela = models.ForeignKey(Tabela, on_delete=models.CASCADE)
     data_atualizacao = models.DateField('Data da atualizacao', auto_now_add=True)
