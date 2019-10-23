@@ -1,9 +1,18 @@
+# Importa os pacotes necessários para gerenciar as rotas da aplicação
 from django.contrib import admin
 from django.urls import path
 from myproject.gestorbases import views
 
+# Definindo o nome da aplicação
 app_name='gestorbases'
 
+
+'''
+	 A lista de urlpatterns contém todas as rotas da aplicação,
+	 fazendo o mapeamento de cada rota para a respectiva view que trata a requisição.
+	 A lista de urlpatterns compoe os endpoints da aplicação
+
+'''
 urlpatterns = [
 	#path('', views.home, name='home'),
 	path('', views.dashboard, name='dashboard'),
