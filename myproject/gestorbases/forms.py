@@ -13,6 +13,8 @@ class InsereBaseForm(forms.ModelForm):
 		fields = ['nome', 'descricao', 'atualizacao', 'host', 'owner']
 
 
+# FORMULÁRIO DE INCLUSÃO DE TABELAS
+# -------------------------------------------
 class InsereTabelaForm(forms.ModelForm):
     class Meta:
         # Modelo
@@ -21,6 +23,8 @@ class InsereTabelaForm(forms.ModelForm):
         fields = ['base', 'nome', 'descricao', 'esquema']
 
 
+# FORMULÁRIO DE INCLUSÃO DE NOVA ATUALIZAÇÃO
+# -------------------------------------------
 class InsereAtualizacaoForm(forms.ModelForm):
     class Meta:
         # Modelo
@@ -29,7 +33,7 @@ class InsereAtualizacaoForm(forms.ModelForm):
         fields = ['tabela', 'responsavel', 'observacoes', 'mes_ref', 'ano_ref', 'origem_dados']
 
 
-    def filteringTables(request):
+    def filteringTables(self, request):
         tabela = request.GET.get('tabela')
         tabelas = Tabela.objetos.filter(nome__icontains=tabela)
         return tabelas
