@@ -370,6 +370,10 @@ class AtualizacaoDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # ##############  VIEWS DE TESTE ####################
+'''
+	As views abaixo foram implementadas para fins de teste durante o desenvolvimento da aplicação.
+	Não interferem no funcionamento da mesma em produção
+'''
 from django.http import HttpResponse
 from django.core import serializers
 import json
