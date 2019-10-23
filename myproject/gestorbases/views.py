@@ -42,6 +42,10 @@ import json
 
 
 # ########################### VIEWS DE LOGIN ##########################
+"""
+	Responsável por direcionar o usuário para a view de login caso tente acessar qualquer página
+	da aplicação sem está devidamente autenticado
+"""
 def login(request):
 	if request.user.id:
 		return render(request, 'gestorbases/logado.html',{})
@@ -272,7 +276,7 @@ def getUpdateByTables(request, tab):
 	return paginator.get_page(page)
 
 
-
+## Disponibiliza o serviço de listagem de atualizações para ser consumido via ajax
 def getAtualizacoes(request):
 	from django.db import connection
 	atualizacoes = []
