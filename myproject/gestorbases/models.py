@@ -46,4 +46,27 @@ class Atualizacao(models.Model):
     def __str__(self):
         return self.tabela.nome
 
+
+
+from django.db import models
+from django.contrib.auth.signals import user_logged_in, user_logged_out  
+
+class LoggedUser(models.Model):
+    username = models.CharField(max_length=30, primary_key=True)
+    objetos = models.Manager()
+
+
+    def __unicode__(self):
+        return self.username
+
+    
+    def inserteLoggedUser(self, request):
+        usuario = request.POST.get('usuario')
+        user = LoggedUser(username=usuario)
+        user.save()
+        
+
+    def __str__(self):
+        return self.username
+
       

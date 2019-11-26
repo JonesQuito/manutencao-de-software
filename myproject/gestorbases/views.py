@@ -22,6 +22,7 @@ from myproject.gestorbases.forms import InsereAtualizacaoForm
 from myproject.gestorbases.models import Base
 from myproject.gestorbases.models import Tabela
 from myproject.gestorbases.models import Atualizacao
+from myproject.gestorbases.models import LoggedUser
 
 # DEPENDÊNCIAS NECESSÁRIAS PARA IMPLEMENTAR A PAGINAÇÃO
 from django.core.paginator import EmptyPage
@@ -36,6 +37,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
+from django.contrib.auth.decorators import login_required, permission_required
+
+
+from django.contrib import messages
+
+from django.db import connection
+
 # DEPENDÊNCIAS NECESSÁRIAS PARA SERIALIZAR DADOS EM JSON
 import json
 
@@ -46,6 +54,24 @@ import json
 	Responsável por direcionar o usuário para a view de login caso tente acessar qualquer página
 	da aplicação sem está devidamente autenticado
 """
+
+def inserteLoggedUser(request):
+    usuario = request.POST.get('usuario')
+    user = LoggedUser(username=usuario)
+    user.save()
+
+def deleteLoggedUser(request, pk):
+	try:
+		username = request.POST.get('pk')
+		u = LoggedUser.objetos.filter(username=pk).first()
+		print(u)
+		u.delete()
+
+	except LoggedUser.DoesNotExist:
+		pass
+
+
+
 def login(request):
 	if request.user.id:
 		return render(request, 'gestorbases/logado.html',{})
@@ -57,12 +83,14 @@ def login(request):
 		if(u is not None):
 			if(u.is_active):
 				authlogin(request, u)
+				inserteLoggedUser(request)
 				return redirect('gestorbases:dashboard')
 				#return render(request, 'gestorbases/dashboard.html',{'user': u})
 	return render(request, 'gestorbases/login.html', {})
 
-def sair(request):
+def sair(request, pk):
 	logout(request)
+	deleteLoggedUser(request, pk)
 	return render(request, 'gestorbases/login.html', {})
 # ########################### SISTEMA DE LOGIN ##########################
 
@@ -71,10 +99,16 @@ def sair(request):
 @login_required
 def dashboard(request):
 	if request.user.is_authenticated:
+		cursor = connection.cursor()
+		cursor.execute("select * from count_users")
 		bases = Base.objetos.all()
 		tabelas = Tabela.objetos.all()
 		atualizacoes = Atualizacao.objetos.all()
-		contexto = {'tabelas': tabelas, 'bases': bases, 'atualizacoes': atualizacoes}
+		
+		request.session['count_user'] = LoggedUser.objetos.count()
+		count_user = request.session.get('count_user')
+
+		contexto = {'tabelas': tabelas, 'bases': bases, 'atualizacoes': atualizacoes, 'count_user':count_user}
 		return render(request, 'gestorbases/dashboard.html', contexto)
 
 
@@ -86,8 +120,28 @@ class BaseCreateView(LoginRequiredMixin, CreateView):
     form_class = InsereBaseForm
     success_url = reverse_lazy("gestorbases:lista_bases")
 
+def cadastroBase(request):
+	if request.POST:
+		nome = request.POST.get('nome')
+		descricao = request.POST.get('descricao')
+		host = request.POST.get('host')
+		owner = request.POST.get('owner')
+		# verifica se já há uma base com o nome informado
+		bases = Base.objetos.filter(nome=nome)
+		if len(bases) > 0:
+			messages.add_message(request, messages.INFO, 'Já existe uma base com o nome '+ nome+ '!')
+			contexto = {'nome': nome, 'descricao': descricao, 'host': host, 'owner':owner}
+			return render(request, 'gestorbases/base/novaBase.html', contexto)
 
+		base = Base(nome=nome,descricao=descricao, host=host, owner=owner)
+		baseName = Base.objetos.filter(nome__icontains=base)
+		base.save()
+		return redirect('gestorbases:lista_bases')
+	else:
+		return render(request, 'gestorbases/base/novaBase.html', {})
+    
 
+	
 # LISTAGEM DE BASES COM PAGINAÇÃO
 # ----------------------------------------------
 @login_required
@@ -147,6 +201,18 @@ def listingTables(request):
 		return render(request, 'gestorbases/tabela/listaTabelas.html', {'tabelas': tabelas})
 
 
+@login_required
+def listingUsuarios(request):
+	usuarios_lista = LoggedUser.objetos.all()
+	print(usuarios_lista)
+	paginator = Paginator(usuarios_lista, 7)
+	page = request.GET.get('page')
+	usuarios = paginator.get_page(page)
+	print(usuarios)
+	return render(request, 'gestorbases/usuario/listausuariosLogados.html', {'usuarios': usuarios})
+
+
+
 
 # EDIÇÃO DE TABELAS
 # ----------------------------------------------
@@ -191,7 +257,6 @@ class AtualizacaoCreateView(LoginRequiredMixin, CreateView):
 	success_url = reverse_lazy('gestorbases:nova_atualizacao')
 
 
-
 def novaAtualizazao(request, pk, tab_nome):
 	if request.POST:
 		tabela_id = request.POST.get('tabela')
@@ -203,6 +268,7 @@ def novaAtualizazao(request, pk, tab_nome):
 		observacao = request.POST.get('observacao')
 		atualizacao = Atualizacao(tabela=tabela, responsavel=responsavel, observacoes=observacao, mes_ref=mes_ref, ano_ref=ano_ref, origem_dados=origem_dados)
 		atualizacao.save()
+		print('ssssss')
 		return redirect('gestorbases:lista_atualizacoes')
 	else:
 		context = {
@@ -242,6 +308,8 @@ def listingAtualizacoes(request):
 		return render(request, 'gestorbases/atualizacao/listaAtualizacoes.html', contexto)
 	elif request.GET.get('tabela') == None:		
 		atualizacoes = getAllUpdates(request)
+		messages.add_message(request, messages.INFO, 'Hello world.')
+		#messages = ['Atualização registrada!!']
 		contexto = {'atualizacoes': atualizacoes}
 		return render(request, 'gestorbases/atualizacao/listaAtualizacoes.html', contexto)
 	else:
@@ -378,6 +446,8 @@ from django.http import HttpResponse
 from django.core import serializers
 import json
 from django.http import Http404
+from rest_framework import serializers
+
 
 
 def teste(request):
@@ -389,17 +459,35 @@ def teste(request):
 	return render(request,'gestorbases/teste.html', {'tabelas':tabelas})
 
 
-def teste2(request):
-	tabela = request.GET.get('tabela') # dicionario
-	tabelas = Tabela.objetos.filter(nome__icontains=tabela)
-	tabelas = [ tabela_serializer(tabela) for tabela in tabelas]
+
+def teste2(request, tablename):
+	tabelas = Tabela.objetos.filter(nome__icontains=tablename)
+	return JsonResponse(serializer.data, safe=False)
+	
+	#tabelas = [ tabela_serializer(tabela) for tabela in tabelas]
 	#return HttpResponse(tabelas, content_type='application/json')
-	return render(request, 'gestorbases/teste.html', {'tabelas':tabelas})
+	#return render(request, 'gestorbases/teste.html', {'tabelas':tabelas})
+
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+from myproject.gestorbases.serializers import TabelaSerializer
+from myproject.gestorbases.serializers import BaseSerializer
+
+@csrf_exempt
+def tabela_serializer(request, tablename):
+	if request.method == 'GET':
+		tabelas = Tabela.objetos.filter(nome=tablename)
+		serializer = TabelaSerializer(tabelas, many=True)
+		return JsonResponse(serializer.data, safe=False)
 
 
-def tabela_serializer(tabela):
-	return {'id':tabela.id, 'nome': tabela.nome, 'descricao':tabela.descricao, 'esquema':tabela.esquema}
-
+@csrf_exempt
+def base_serializer(request, basename):
+	if request.method == 'GET':
+		bases = Base.objetos.filter(nome=basename)
+		serializer = BaseSerializer(bases, many=True)
+		return JsonResponse(serializer.data, safe=False)
 
 
 
