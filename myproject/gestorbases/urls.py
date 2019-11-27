@@ -20,7 +20,6 @@ urlpatterns = [
 
 	#path('bases/nova', views.BaseCreateView.as_view(), name='nova_base'),
 	path('bases/nova', views.cadastroBase, name='nova_base'),
-	
 	#path('bases/lista', views.BaseListView.as_view(), name='lista_bases'),
 	path('bases/lista', views.listingBases, name='lista_bases'),
 	path('bases/atualiza/<pk>', views.BaseUpdateView.as_view(), name='atualiza_base'),
@@ -28,12 +27,13 @@ urlpatterns = [
 	path('bases/serializer/<basename>', views.base_serializer, name='bases_serializer'),
 
 
+
 	path('tabelas/nova', views.TabelaCreateView.as_view(), name='nova_tabela'),
+
 	#path('tabelas/lista', views.TabelaListView.as_view(), name='lista_tabelas'),
 	path('tabelas/lista', views.listingTables, name='lista_tabelas'),
 	path('tabelas/atualiza/<pk>', views.TabelaUpdateView.as_view(), name='atualiza_tabela'),
 	path('tabelas/exclui/<pk>', views.TabelaDeleteView.as_view(), name='exclui_tabela'),
-
 	path('tabelas/serializer/<tablename>', views.tabela_serializer, name='tabelas_serializer'),
 
 

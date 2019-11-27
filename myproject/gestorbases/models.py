@@ -21,7 +21,7 @@ class Base(models.Model):
 '''
 class Tabela(models.Model):
     base = models.ForeignKey(Base, on_delete=models.CASCADE)
-    nome = models.CharField(max_length=255, null=True, blank=False)
+    nome = models.CharField(max_length=255, null=True, blank=False, unique=True)
     descricao = models.TextField(max_length=255, null=True, blank=True)
     esquema = models.CharField(max_length=255, null=True, blank=True)
     objetos = models.Manager()

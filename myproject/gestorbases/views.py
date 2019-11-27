@@ -175,12 +175,20 @@ class BaseDeleteView(LoginRequiredMixin, DeleteView):
 
 # CADASTRO DE TABELA
 # ----------------------------------------------
+from django.http import HttpResponse
 class TabelaCreateView(LoginRequiredMixin, CreateView):
 	template_name = 'gestorbases/tabela/cadastroTabela.html'
 	model = Tabela
 	form_class = InsereTabelaForm
 	success_url = reverse_lazy('gestorbases:lista_tabelas')
 
+	def form_invalid(self, form):
+		messages.add_message(self.request, messages.INFO, 'Já existe uma tabela com o nome informado!')
+		return redirect('gestorbases:nova_tabela')
+
+	def form_valid(self, form):
+		return super(TabelaCreateView, self).form_valid(form)
+		
 
 # LISTAGEM DE TABELAS COM PAGINAÇÃO
 # ----------------------------------------------
@@ -384,6 +392,7 @@ def getUpdateByTableAndDate(request, tab, date):
 		date = '01/01/1970'
 
 	sql = "select * from gestorbases_atualizacao where tabela_id in " + condicao + " and data_atualizacao >= '" + date + "'"
+	print(sql)
 	atualizacoes_lista = Atualizacao.objetos.raw(sql)
 	paginator = Paginator(atualizacoes_lista, 5)
 	page = request.GET.get('page')
@@ -431,9 +440,6 @@ class AtualizacaoDeleteView(LoginRequiredMixin, DeleteView):
 	fields = '__all__'
 	context_object_name = 'atualizacao'
 	success_url = reverse_lazy('gestorbases:lista_atualizacoes')
-
-
-
 
 
 
