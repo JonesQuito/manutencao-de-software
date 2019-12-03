@@ -23,6 +23,7 @@
  - pip install psycopg2
  - pip install djangorestframework
  - pip install django-widget-tweaks
+ - pip install django-global-permissions
 
 
 O sistema faz acesso a um bonco postgres. A configuração padrão de acesso ao banco assume que existe um banco de
