@@ -40,6 +40,7 @@ class Atualizacao(models.Model):
     observacoes = models.TextField(null=True, blank=True)
     mes_ref = models.IntegerField(null=True, blank=True)
     ano_ref = models.IntegerField(null=True, blank=True)
+    reg_alt = models.IntegerField(null=True, blank=True)
     origem_dados = models.CharField(max_length=255, null=True, blank=False)
     objetos = models.Manager()
 

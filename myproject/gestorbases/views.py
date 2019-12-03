@@ -273,10 +273,10 @@ def novaAtualizazao(request, pk, tab_nome):
 		origem_dados = request.POST.get('origem_dados')
 		mes_ref = request.POST.get('mes_ref')
 		ano_ref = request.POST.get('ano_ref')
+		reg_alt = request.POST.get('reg_alt')
 		observacao = request.POST.get('observacao')
-		atualizacao = Atualizacao(tabela=tabela, responsavel=responsavel, observacoes=observacao, mes_ref=mes_ref, ano_ref=ano_ref, origem_dados=origem_dados)
+		atualizacao = Atualizacao(tabela=tabela, responsavel=responsavel, observacoes=observacao, mes_ref=mes_ref, ano_ref=ano_ref, origem_dados=origem_dados, reg_alt=reg_alt)
 		atualizacao.save()
-		print('ssssss')
 		return redirect('gestorbases:lista_atualizacoes')
 	else:
 		context = {
