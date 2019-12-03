@@ -100,7 +100,7 @@ def sair(request, pk):
 def dashboard(request):
 	if request.user.is_authenticated:
 		cursor = connection.cursor()
-		cursor.execute("select * from count_users")
+		#cursor.execute("select * from count_users")
 		bases = Base.objetos.all()
 		tabelas = Tabela.objetos.all()
 		atualizacoes = Atualizacao.objetos.all()
@@ -211,13 +211,18 @@ def listingTables(request):
 
 @login_required
 def listingUsuarios(request):
-	usuarios_lista = LoggedUser.objetos.all()
-	print(usuarios_lista)
-	paginator = Paginator(usuarios_lista, 7)
-	page = request.GET.get('page')
-	usuarios = paginator.get_page(page)
-	print(usuarios)
-	return render(request, 'gestorbases/usuario/listausuariosLogados.html', {'usuarios': usuarios})
+	if request.user.has_perm('perms.global_permissions.view_administrator'):
+		usuarios_lista = LoggedUser.objetos.all()
+		print(usuarios_lista)
+		paginator = Paginator(usuarios_lista, 7)
+		page = request.GET.get('page')
+		usuarios = paginator.get_page(page)
+		print(usuarios)
+		return render(request, 'gestorbases/usuario/listausuariosLogados.html', {'usuarios': usuarios})
+	else:
+		pass
+		return redirect('gestorbases:dashboard')
+
 
 
 
